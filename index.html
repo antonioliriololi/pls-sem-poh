@@ -198,14 +198,14 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid #eee; font-s
 <!-- ══════════════════════════════════════════════════════ PASO 2 -->
 <div class="step">
   <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
-  <div class="main-hint">
+  <div class="main-hint" id="main-hint">
     <strong>3 opciones:</strong><br>
-    · <strong>Vacío izquierdo</strong> → se usará "los factores que inciden en…" (pregunta general por factores)<br>
-    · <strong>Una variable</strong> → ej: <em>la calidad de servicio</em> (condensa todas las X en una)<br>
-    · <strong>Varias variables</strong> → ej: <em>el servicio financiero, la información y la tangibilidad</em> (lista con "y")
+    · <strong>Celda izquierda vacía</strong> → se usará <em>"los factores que inciden en…"</em> (pregunta general por factores)<br>
+    · <strong>Una variable</strong> → ej: <em>la calidad de servicio</em> (una sola variable representa a <span id="hint-vars-list" style="color:#555"></span>)<br>
+    · <strong>Varias variables</strong> → ej: <em id="hint-vars-ejemplo" style="color:#555"></em> (toma las principales variables de la primera columna)
   </div>
   <div class="main-row">
-    <input type="text" id="main-a" placeholder="Dejar vacío · o escribir una o varias variables X">
+    <input type="text" id="main-a" placeholder="Dejar vacío · o escribir una o varias variables X" oninput="updateHint()">
     <span class="arrow-lbl">→</span>
     <input type="text" id="main-b" placeholder="Ej: la lealtad">
   </div>
@@ -499,11 +499,12 @@ function addPair(aVal = '', bVal = '') {
   d.className = 'pair-row';
   d.innerHTML = `
     <span class="pair-num">${n+1}</span>
-    <input type="text" class="var-input var-a" value="${escHtml(aVal)}" placeholder="Variable independiente (X)">
+    <input type="text" class="var-input var-a" value="${escHtml(aVal)}" placeholder="Variable independiente (X)" oninput="updateHint()">
     <span class="arrow-lbl">→</span>
     <input type="text" class="var-input var-b" value="${escHtml(bVal)}" placeholder="Variable dependiente (Y)">
     <button class="btn-rm" onclick="removePair(this)" title="Eliminar par">✕</button>`;
   c.appendChild(d);
+  updateHint();
   updateCounter();
 }
 
@@ -516,12 +517,14 @@ function removeLastPair() {
   if (!rows.length) return;
   rows[rows.length - 1].remove();
   renumber();
+  updateHint();
   updateCounter();
 }
 
 function removePair(btn) {
   btn.closest('.pair-row').remove();
   renumber();
+  updateHint();
   updateCounter();
 }
 
@@ -696,11 +699,54 @@ function copyAll() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// HINT DINÁMICO — Paso 2
+// ══════════════════════════════════════════════════════════════════
+function updateHint() {
+  // Recoger variables X únicas del Paso 1
+  const varsX = [...new Set(
+    [...document.querySelectorAll('.pair-row .var-a')]
+      .map(i => i.value.trim()).filter(Boolean)
+  )];
+
+  // Línea 2: lista de variables X para mostrar en "una sola variable representa a…"
+  const spanList = document.getElementById('hint-vars-list');
+  if (spanList) {
+    spanList.textContent = varsX.length
+      ? varsX.join(', ')
+      : 'las variables X del Paso 1';
+  }
+
+  // Línea 3: ejemplo automático con las variables X del Paso 1
+  const spanEj = document.getElementById('hint-vars-ejemplo');
+  if (spanEj) {
+    if (varsX.length >= 2) {
+      const ultimas = varsX.slice(-1)[0];
+      const anteriores = varsX.slice(0, -1).join(', ');
+      spanEj.textContent = `${anteriores} y ${ultimas}`;
+    } else if (varsX.length === 1) {
+      spanEj.textContent = varsX[0];
+    } else {
+      spanEj.textContent = 'el servicio financiero, la información y la tangibilidad';
+    }
+  }
+
+  // Resaltar la opción activa según lo que hay en main-a
+  const val = (document.getElementById('main-a')?.value || '').trim();
+  const lines = document.querySelectorAll('#main-hint > span.hint-opt, #main-hint br ~ *');
+  // Highlight logic: simplemente actualizar el color de la celda de input
+  const inp = document.getElementById('main-a');
+  if (inp) {
+    inp.style.borderColor = val === '' ? '#aaa' : '#000';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════
 window.onload = () => {
   buildCards();
   PARES_INICIALES.forEach(([a,b]) => addPair(a, b));
+  updateHint();
 };
 </script>
 </body>
