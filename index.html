@@ -41,14 +41,30 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
   border: 1px solid #ccc; background: #fff; cursor: pointer; color: #aaa;
 }
 .btn-rm:hover { border-color: #000; color: #000; }
+
+.pair-btns { display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
 .btn-add-pair {
   font-family: Arial, sans-serif; font-size: 0.78rem; font-weight: bold;
   padding: 7px 14px; border: 1px solid #000; background: #fff;
-  cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px;
+  cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
 }
 .btn-add-pair:hover { background: #f0f0f0; }
-.pair-counter { font-size: 0.7rem; color: #bbb; margin-top: 6px; }
+.btn-rm-last {
+  font-family: Arial, sans-serif; font-size: 0.78rem; font-weight: bold;
+  padding: 7px 14px; border: 1px solid #ccc; background: #fff;
+  cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; color: #666;
+}
+.btn-rm-last:hover { border-color: #000; color: #000; background: #f0f0f0; }
+.btn-rm-last:disabled { opacity: 0.3; cursor: default; }
+.pair-counter { font-size: 0.7rem; color: #bbb; margin-left: 4px; }
 
+/* ── Paso 2 ── */
+.main-hint {
+  font-size: 0.72rem; color: #888; background: #fafafa;
+  border: 1px solid #e8e8e8; padding: 8px 12px; margin-bottom: 10px;
+  line-height: 1.5;
+}
+.main-hint strong { color: #444; }
 .main-row { display: flex; align-items: center; gap: 8px; }
 .main-row input {
   flex: 1; font-family: Arial, sans-serif; font-size: 0.87rem;
@@ -56,9 +72,14 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 }
 .main-row input:focus { outline: none; background: #fafafa; }
 .main-row input::placeholder { color: #bbb; }
+.main-row .fixed-b {
+  flex: 1; font-family: Arial, sans-serif; font-size: 0.87rem;
+  padding: 8px 10px; border: 2px solid #000; background: #fff; color: #000;
+}
 
+/* ── Paso 3 ── */
 .ctx-grid {
-  display: grid; grid-template-columns: 1fr 0.6fr 1fr 1fr; gap: 12px;
+  display: grid; grid-template-columns: 1fr 1fr 0.7fr 0.6fr; gap: 12px;
 }
 .grp label {
   display: block; font-size: 0.7rem; font-weight: bold;
@@ -70,8 +91,8 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 }
 .grp input:focus { border-color: #000; outline: none; }
 .grp input::placeholder { color: #b0b0b0; }
-.grp input:not(:placeholder-shown) { color: #000; }
 
+/* ── Estilos ── */
 .style-grid {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px;
   margin-bottom: 14px;
@@ -159,49 +180,61 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid #eee; font-s
 
 <header>
   <h1>Generador de Problemas, Objetivos e Hipótesis · PLS-SEM</h1>
-  <p>Investigación explicativa · 10 estilos · AntoMatic Tools · v3</p>
+  <p>Investigación explicativa · 10 estilos · AntoMatic Tools · v4</p>
 </header>
 
+<!-- ══════════════════════════════════════════════════════ PASO 1 -->
 <div class="step">
   <h2>Paso 1 · Pares de variables (conexiones del modelo)</h2>
-  <p class="step-note">Ingresa cada relación del modelo. Ejemplo: el liderazgo transformacional → el desempeño laboral</p>
+  <p class="step-note">Ingresa cada relación del modelo. La variable de la izquierda influye sobre la de la derecha.</p>
   <div id="pairs-container"></div>
-  <button class="btn-add-pair" id="btn-add" onclick="addPair()">+ Agregar par</button>
-  <div class="pair-counter" id="pair-counter">0 / 16 pares</div>
-</div>
-
-<div class="step">
-  <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
-  <p class="step-note">Escribe el nombre global de las variables independientes con su artículo (izquierda) y la variable dependiente principal con su artículo (derecha). Ejemplo: las prácticas de gestión → el desempeño laboral</p>
-  <div class="main-row">
-    <input type="text" id="main-a" placeholder="Ej: las prácticas de gestión del talento">
-    <span class="arrow-lbl">→</span>
-    <input type="text" id="main-b" placeholder="Ej: el desempeño laboral">
+  <div class="pair-btns">
+    <button class="btn-add-pair" id="btn-add" onclick="addPair()">+ Agregar par</button>
+    <button class="btn-rm-last" id="btn-rm-last" onclick="removeLastPair()">− Eliminar último par</button>
+    <span class="pair-counter" id="pair-counter">0 / 16 pares</span>
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════ PASO 2 -->
+<div class="step">
+  <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
+  <div class="main-hint">
+    <strong>3 opciones:</strong><br>
+    · <strong>Vacío izquierdo</strong> → se usará "los factores que inciden en…" (pregunta general por factores)<br>
+    · <strong>Una variable</strong> → ej: <em>la calidad de servicio</em> (condensa todas las X en una)<br>
+    · <strong>Varias variables</strong> → ej: <em>el servicio financiero, la información y la tangibilidad</em> (lista con "y")
+  </div>
+  <div class="main-row">
+    <input type="text" id="main-a" placeholder="Dejar vacío · o escribir una o varias variables X">
+    <span class="arrow-lbl">→</span>
+    <input type="text" id="main-b" placeholder="Ej: la lealtad">
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ PASO 3 -->
 <div class="step">
   <h2>Paso 3 · Contexto</h2>
   <div class="ctx-grid">
     <div class="grp">
-      <label>¿De qué organización?</label>
-      <input type="text" id="ctx-org" placeholder="la SUNAT">
+      <label>¿De quiénes? <span style="font-weight:normal;color:#aaa">(opcional)</span></label>
+      <input type="text" id="ctx-quienes" placeholder="los clientes">
     </div>
     <div class="grp">
-      <label>¿Qué año?</label>
-      <input type="text" id="ctx-anio" placeholder="2026">
+      <label>¿En qué organización?</label>
+      <input type="text" id="ctx-org" placeholder="la Caja Huancayo">
     </div>
     <div class="grp">
-      <label>¿De quiénes? (informantes)</label>
-      <input type="text" id="ctx-quienes" placeholder="los colaboradores">
-    </div>
-    <div class="grp">
-      <label>¿Dónde?</label>
+      <label>¿Dónde? (ciudad, región)</label>
       <input type="text" id="ctx-lugar" placeholder="Huaraz, Áncash">
+    </div>
+    <div class="grp">
+      <label>¿Año? (período)</label>
+      <input type="text" id="ctx-anio" placeholder="2026">
     </div>
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════ PASO 4 -->
 <div class="step">
   <h2>Paso 4 · Estilo de redacción</h2>
   <div class="style-grid" id="style-grid"></div>
@@ -215,6 +248,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid #eee; font-s
 
 <button class="btn-gen" onclick="generate()">⚡ Generar Problemas · Objetivos · Hipótesis</button>
 
+<!-- ══════════════════════════════════════════════════════ OUTPUT -->
 <div id="output">
   <div id="out-model" class="out-model-summary" style="display:none"></div>
   <div id="out-content"></div>
@@ -225,7 +259,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid #eee; font-s
   </div>
 </div>
 
-<footer>AntoMatic Tools · idea de Antonio Lirio v3 · Huaraz, Áncash, Perú</footer>
+<footer>AntoMatic Tools · idea de Antonio Lirio v4 · Huaraz, Áncash, Perú</footer>
 
 <script>
 // ══════════════════════════════════════════════════════════════════
@@ -242,42 +276,28 @@ function tieneArticulo(str) {
   return ARTS.some(a => s.startsWith(a));
 }
 
-// ── FIX 1: Se analiza la PRIMERA PALABRA para determinar el artículo ──
-// Antes se miraba el último carácter de toda la frase (bug: "prácticas de gestión"
-// terminaba en "n" y se asignaba "el" en vez de "las").
 function detectarArticulo(str) {
   const s = str.toLowerCase().trim();
-  // Tomar solo la primera palabra para detectar género/número
   const primera = s.split(/\s+/)[0];
 
-  // Excepciones: masculinos de origen griego terminados en -ma (plural -mas)
-  // aunque terminan en -as, son masculinos: sistemas, programas, temas, etc.
   const mascMa = ['sistemas','programas','temas','problemas','esquemas',
                   'dilemas','traumas','poemas','idiomas','aromas','climas',
                   'dramas','panoramas','diagramas','paradigmas','axiomas',
                   'teoremas','emblemas','estigmas','fantasmas'];
   if (mascMa.includes(primera)) return 'los ';
 
-  // Femenino plural: primera palabra termina en -as
   if (primera.endsWith('as')) return 'las ';
-
-  // Femenino plural por sufijos reconocibles
   if (primera.endsWith('iones') || primera.endsWith('siones') ||
       primera.endsWith('dades') || primera.endsWith('tudes') ||
       primera.endsWith('cias')  || primera.endsWith('gias')  ||
       primera.endsWith('uras')  || primera.endsWith('ezas')  ||
       primera.endsWith('eras')) return 'las ';
-
-  // Masculino plural: primera palabra termina en -os o -es/s genérico
   if (primera.endsWith('os')) return 'los ';
   if (primera.endsWith('es') || primera.endsWith('s')) return 'los ';
 
-  // Femenino singular por sufijos
   const femSuf = ['ión','dad','tad','tud','sis','cia','gia','ría','za','ez','umbre','eza','ura'];
   if (femSuf.some(f => primera.endsWith(f))) return 'la ';
 
-  // Femenino singular: primera palabra termina en -a
-  // Excepciones masculinas en -ma singular (sistema, programa, tema…)
   const mascMaSing = ['sistema','programa','tema','problema','esquema',
                       'dilema','trauma','poema','idioma','aroma','clima',
                       'drama','panorama','diagrama','paradigma','axioma',
@@ -286,7 +306,6 @@ function detectarArticulo(str) {
       !primera.endsWith('ma') && !primera.endsWith('pa') &&
       !primera.endsWith('ta') && !primera.endsWith('ca')) return 'la ';
 
-  // Masculino por defecto
   return 'el ';
 }
 
@@ -302,15 +321,44 @@ function cap(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// ── FIX 2: Contracción obligatoria "de el" → "del" ──
 function fixDeEl(str) {
-  // Reemplaza "de el" (con espacio) por "del", insensible a mayúsculas
   return str.replace(/\bde el\b/gi, 'del');
 }
 
-// Aplica fixDeEl + cap en un solo paso
 function t(str) {
   return cap(fixDeEl(str));
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LÓGICA PASO 2: CONSTRUIR mainA SEGÚN OPCIÓN
+// ══════════════════════════════════════════════════════════════════
+// Devuelve el texto para usar en pregunta/objetivo general según
+// lo que el usuario haya escrito (o no) en el campo izquierdo.
+//
+//   Opción 1 – vacío     → "los factores que inciden en …"
+//   Opción 2 – 1 variable → la variable tal cual
+//   Opción 3 – varias    → las variables separadas por comas/punto y coma
+//
+function buildMainA(rawValue) {
+  return rawValue.trim(); // se devuelve tal cual; la lógica por opción
+                           // se aplica en generate() al construir las frases
+}
+
+// Construye la pregunta/objetivo general según el valor de mainA
+function buildPG(e, mainARaw, mainB, ctx) {
+  if (!mainARaw) {
+    // Opción 1: vacío → factores
+    return t(`¿Cuáles son los factores que inciden en ${mainB} ${ctx}?`);
+  }
+  return t(e.pg(mainARaw, mainB, ctx));
+}
+
+function buildOG(e, mainARaw, mainB, ctx) {
+  if (!mainARaw) {
+    // Opción 1: vacío → factores
+    return t(`Identificar los factores que inciden en ${mainB} ${ctx}.`);
+  }
+  return t(e.og(mainARaw, mainB, ctx));
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -422,9 +470,6 @@ const ESTILOS = [
 const IPMA_PE = (my,c)=>t(`¿Cuál es el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}?`);
 const IPMA_OE = (my,c)=>t(`Identificar el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}.`);
 
-// ── FIX 3: Títulos en formato oración (solo primera letra en mayúscula) ──
-// El CSS text-transform:uppercase los mostrará en mayúsculas en pantalla,
-// pero el texto que se copia tendrá formato oración correcto.
 const TITULOS = {
   PG : 'Problema general',
   PE : 'Problemas específicos',
@@ -436,24 +481,41 @@ const TITULOS = {
 // ══════════════════════════════════════════════════════════════════
 // PARES
 // ══════════════════════════════════════════════════════════════════
-let pairN = 0;
 const MAX = 16;
 
-function addPair() {
+// Pares preliminares predeterminados
+const PARES_INICIALES = [
+  ['el servicio financiero',  'la lealtad'],
+  ['la información',          'la lealtad'],
+  ['el trato del trabajador', 'la lealtad'],
+  ['la tangibilidad',         'la lealtad'],
+];
+
+function addPair(aVal = '', bVal = '') {
   const n = document.querySelectorAll('.pair-row').length;
   if (n >= MAX) return;
-  pairN++;
   const c = document.getElementById('pairs-container');
   const d = document.createElement('div');
   d.className = 'pair-row';
   d.innerHTML = `
     <span class="pair-num">${n+1}</span>
-    <input type="text" class="var-input var-a" placeholder="Variable X (ej: el liderazgo transformacional)">
+    <input type="text" class="var-input var-a" value="${escHtml(aVal)}" placeholder="Variable independiente (X)">
     <span class="arrow-lbl">→</span>
-    <input type="text" class="var-input var-b" placeholder="Variable Y (ej: el desempeño laboral)">
+    <input type="text" class="var-input var-b" value="${escHtml(bVal)}" placeholder="Variable dependiente (Y)">
     <button class="btn-rm" onclick="removePair(this)" title="Eliminar par">✕</button>`;
   c.appendChild(d);
-  d.querySelector('.var-a').focus();
+  updateCounter();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function removeLastPair() {
+  const rows = document.querySelectorAll('.pair-row');
+  if (!rows.length) return;
+  rows[rows.length - 1].remove();
+  renumber();
   updateCounter();
 }
 
@@ -473,6 +535,7 @@ function updateCounter() {
   const n = document.querySelectorAll('.pair-row').length;
   document.getElementById('pair-counter').textContent = `${n} / ${MAX} pares`;
   document.getElementById('btn-add').disabled = n >= MAX;
+  document.getElementById('btn-rm-last').disabled = n === 0;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -513,23 +576,30 @@ function generate() {
 
   if (!pairsRaw.length) { alert('Ingresa al menos un par de variables con ambos campos completados.'); return; }
 
-  const pairs = pairsRaw.map(([a,b]) => [a, b]);
+  const pairs = pairsRaw;
 
   const mainARaw = document.getElementById('main-a').value.trim();
   const mainBRaw = document.getElementById('main-b').value.trim();
-  const mainA    = mainARaw;
-  const mainB    = mainBRaw;
 
+  // ── Variable dependiente de referencia para IPMA y fallback
+  const refY = mainBRaw || (pairs[0] ? pairs[0][1] : '[variable dependiente]');
+
+  const quienes = document.getElementById('ctx-quienes').value.trim(); // opcional
   const org     = document.getElementById('ctx-org').value.trim()     || '[organización]';
-  const anio    = document.getElementById('ctx-anio').value.trim()    || '[año]';
-  const quienes = document.getElementById('ctx-quienes').value.trim() || '[quiénes]';
   const lugar   = document.getElementById('ctx-lugar').value.trim()   || '[lugar]';
+  const anio    = document.getElementById('ctx-anio').value.trim()    || '[año]';
   const ipma    = document.getElementById('ipma-chk').checked;
   const e       = ESTILOS.find(x=>x.id===selStyle);
 
-  const ctx  = `de ${quienes} de ${org}, ${lugar}, ${anio}`;
-  const refY = mainB || (pairs[0]?pairs[0][1]:'[variable dependiente]');
-  const mainARaw2 = mainA;
+  // Si "quienes" está vacío, se omite "de [quiénes]" del contexto
+  const ctx = quienes
+    ? `de ${quienes} de ${org}, ${lugar}, ${anio}`
+    : `de ${org}, ${lugar}, ${anio}`;
+
+  // ── Construir mainA según opción
+  // Opción 1: vacío → se detecta en buildPG/buildOG
+  // Opción 2 y 3: el texto tal como lo escribió el usuario
+  const mainA = mainARaw; // puede estar vacío
 
   let html = '';
   let plain = '';
@@ -537,12 +607,12 @@ function generate() {
   // Resumen del modelo
   const modelHTML = pairs.map(([a,b])=>`<span class="pair-tag">${a} → ${b}</span>`).join(' ');
   document.getElementById('out-model').innerHTML =
-    `<div class="out-model-title">Modelo ingresado · ${pairs.length} par(es) · Estilo ${e.id}: ${e.short}</div>${modelHTML}`;
+    `<div class="out-model-title">Modelo · ${pairs.length} par(es) · Estilo ${e.id}: ${e.short}</div>${modelHTML}`;
   document.getElementById('out-model').style.display = 'block';
 
   // ── PROBLEMA GENERAL ──
-  if (e.hasGeneral && mainA && mainB) {
-    const tx = e.pg(mainA, mainB, ctx);
+  if (e.hasGeneral && mainBRaw) {
+    const tx = buildPG(e, mainA, mainBRaw, ctx);
     html  += sec(TITULOS.PG, `<div class="out-general">${tx}</div>`);
     plain += `${TITULOS.PG}\n${tx}\n\n`;
   }
@@ -551,7 +621,7 @@ function generate() {
   let peHtml='', peText='', n=0;
   pairs.forEach(([a,b])=>{
     n++;
-    const tx = e.id===9 ? e.pe(a,b,ctx,mainARaw2) : e.pe(a,b,ctx);
+    const tx = e.id===9 ? e.pe(a,b,ctx,mainA||a) : e.pe(a,b,ctx);
     peHtml += `<li>${tx}</li>`;
     peText += `${n}. ${tx}\n`;
   });
@@ -565,8 +635,8 @@ function generate() {
   plain += `${TITULOS.PE}\n${peText}\n`;
 
   // ── OBJETIVO GENERAL ──
-  if (e.hasGeneral && mainA && mainB) {
-    const tx = e.og(mainA, mainB, ctx);
+  if (e.hasGeneral && mainBRaw) {
+    const tx = buildOG(e, mainA, mainBRaw, ctx);
     html  += sec(TITULOS.OG, `<div class="out-general">${tx}</div>`);
     plain += `${TITULOS.OG}\n${tx}\n\n`;
   }
@@ -575,7 +645,7 @@ function generate() {
   let oeHtml='', oeText=''; n=0;
   pairs.forEach(([a,b])=>{
     n++;
-    const tx = e.id===9 ? e.oe(a,b,ctx,mainARaw2) : e.oe(a,b,ctx);
+    const tx = e.id===9 ? e.oe(a,b,ctx,mainA||a) : e.oe(a,b,ctx);
     oeHtml += `<li>${tx}</li>`;
     oeText += `${n}. ${tx}\n`;
   });
@@ -592,7 +662,7 @@ function generate() {
   let heHtml='', heText=''; n=0;
   pairs.forEach(([a,b])=>{
     n++;
-    const tx = e.id===9 ? e.he(a,b,ctx,mainARaw2) : e.he(a,b,ctx);
+    const tx = e.id===9 ? e.he(a,b,ctx,mainA||a) : e.he(a,b,ctx);
     heHtml += `<li>${tx}</li>`;
     heText += `${n}. ${tx}\n`;
   });
@@ -630,9 +700,7 @@ function copyAll() {
 // ══════════════════════════════════════════════════════════════════
 window.onload = () => {
   buildCards();
-  addPair();
-  addPair();
-  addPair();
+  PARES_INICIALES.forEach(([a,b]) => addPair(a, b));
 };
 </script>
 </body>
