@@ -3,66 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador PLS-SEM · AntoMatic</title>
+<title>Generador POH · AntoMatic v5</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: Arial, sans-serif;
   background: #fff;
   color: #000;
-  padding: 24px 20px;
-  max-width: 920px;
+  padding: 0 0 40px 0;
+  max-width: 960px;
   margin: 0 auto;
 }
-header { border-bottom: 3px solid #000; padding-bottom: 12px; margin-bottom: 28px; }
-header h1 { font-size: 1.25rem; text-transform: uppercase; letter-spacing: 2px; }
-header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 
+/* ── HEADER ── */
+header {
+  border-bottom: 3px solid #000;
+  padding: 20px 24px 14px;
+  margin-bottom: 0;
+}
+header h1 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
+header p  { font-size: 0.74rem; color: #666; margin-top: 4px; }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #000;
+  background: #f8f8f8;
+}
+.tab-btn {
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 11px 22px;
+  border: none;
+  border-right: 1px solid #ddd;
+  background: transparent;
+  cursor: pointer;
+  color: #888;
+  transition: background 0.12s, color 0.12s;
+}
+.tab-btn:hover { background: #eee; color: #000; }
+.tab-btn.active {
+  background: #000;
+  color: #fff;
+}
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; padding: 28px 24px 0; }
+.tab-panel.active { display: block; }
+
+/* ── STEP ── */
 .step { margin-bottom: 28px; }
 .step h2 {
-  font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px;
-  border-left: 4px solid #000; padding-left: 10px; margin-bottom: 12px;
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+  border-left: 4px solid #000; padding-left: 10px; margin-bottom: 10px;
 }
-.step-note { font-size: 0.74rem; color: #888; font-style: italic; margin-bottom: 10px; }
+.step-note { font-size: 0.72rem; color: #888; font-style: italic; margin-bottom: 10px; }
 
+/* ── PAIR ROWS (PLS-SEM) ── */
 .pair-row {
   display: flex; align-items: center; gap: 6px; margin-bottom: 7px;
 }
-.pair-num { font-size: 0.7rem; color: #aaa; min-width: 20px; text-align: right; }
+.pair-num { font-size: 0.68rem; color: #aaa; min-width: 20px; text-align: right; }
 .pair-row input.var-input {
-  flex: 1; font-family: Arial, sans-serif; font-size: 0.87rem;
+  flex: 1; font-family: Arial, sans-serif; font-size: 0.86rem;
   padding: 7px 10px; border: 1px solid #ccc; background: #fff; color: #000;
 }
 .pair-row input.var-input:focus { border-color: #000; outline: none; }
-.pair-row input.var-input::placeholder { color: #bbb; }
-.arrow-lbl { font-size: 1rem; font-weight: bold; padding: 0 2px; color: #000; }
+.pair-row input.var-input::placeholder { color: #c0c0c0; }
+.arrow-lbl { font-size: 1rem; font-weight: bold; color: #000; padding: 0 2px; }
 .btn-rm {
-  font-family: Arial, sans-serif; font-size: 0.78rem; padding: 5px 9px;
-  border: 1px solid #ccc; background: #fff; cursor: pointer; color: #aaa;
+  font-family: Arial, sans-serif; font-size: 0.76rem;
+  padding: 5px 9px; border: 1px solid #ccc; background: #fff; cursor: pointer; color: #aaa;
 }
 .btn-rm:hover { border-color: #000; color: #000; }
 
 .pair-btns { display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
 .btn-add-pair {
-  font-family: Arial, sans-serif; font-size: 0.78rem; font-weight: bold;
+  font-family: Arial, sans-serif; font-size: 0.76rem; font-weight: bold;
   padding: 7px 14px; border: 1px solid #000; background: #fff;
-  cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+  cursor: pointer; text-transform: uppercase;
 }
 .btn-add-pair:hover { background: #f0f0f0; }
 .btn-rm-last {
-  font-family: Arial, sans-serif; font-size: 0.78rem; font-weight: bold;
+  font-family: Arial, sans-serif; font-size: 0.76rem; font-weight: bold;
   padding: 7px 14px; border: 1px solid #ccc; background: #fff;
-  cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; color: #666;
+  cursor: pointer; text-transform: uppercase; color: #666;
 }
 .btn-rm-last:hover { border-color: #000; color: #000; background: #f0f0f0; }
 .btn-rm-last:disabled { opacity: 0.3; cursor: default; }
-.pair-counter { font-size: 0.7rem; color: #bbb; margin-left: 4px; }
+.pair-counter { font-size: 0.68rem; color: #bbb; margin-left: 4px; }
 
-/* ── Paso 2 ── */
+/* ── BIVARIADA ── */
+.biv-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 10px;
+}
+.biv-var-block {
+  border: 1px solid #ccc; padding: 14px;
+}
+.biv-var-title {
+  font-size: 0.72rem; font-weight: bold; text-transform: uppercase;
+  letter-spacing: 0.8px; color: #444; margin-bottom: 8px;
+  border-bottom: 2px solid #000; padding-bottom: 5px;
+}
+.biv-var-block input.main-var {
+  width: 100%; font-family: Arial, sans-serif; font-size: 0.9rem;
+  padding: 8px 10px; border: 2px solid #000; margin-bottom: 10px;
+}
+.biv-var-block input.main-var:focus { outline: none; background: #fafafa; }
+.biv-var-block input.main-var::placeholder { color: #bbb; }
+.dim-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+}
+.dim-lbl { font-size: 0.68rem; color: #aaa; min-width: 24px; text-align: right; font-weight: bold; }
+.dim-row input {
+  flex: 1; font-family: Arial, sans-serif; font-size: 0.84rem;
+  padding: 6px 9px; border: 1px solid #ccc;
+}
+.dim-row input:focus { border-color: #000; outline: none; }
+.dim-row input::placeholder { color: #ccc; }
+.btn-rm-dim {
+  font-family: Arial, sans-serif; font-size: 0.72rem;
+  padding: 4px 8px; border: 1px solid #ccc; background: #fff; cursor: pointer; color: #aaa;
+}
+.btn-rm-dim:hover { border-color: #000; color: #000; }
+.biv-dim-btns { display: flex; gap: 7px; margin-top: 5px; }
+.btn-add-dim {
+  font-family: Arial, sans-serif; font-size: 0.72rem; font-weight: bold;
+  padding: 5px 11px; border: 1px solid #000; background: #fff; cursor: pointer;
+}
+.btn-add-dim:hover { background: #f0f0f0; }
+.btn-rm-dim-last {
+  font-family: Arial, sans-serif; font-size: 0.72rem;
+  padding: 5px 11px; border: 1px solid #ccc; background: #fff; cursor: pointer; color: #666;
+}
+.btn-rm-dim-last:hover { border-color: #000; color: #000; }
+.btn-rm-dim-last:disabled { opacity: 0.3; cursor: default; }
+
+/* ── META-ANÁLISIS ── */
+.meta-vars {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px;
+  align-items: center; margin-bottom: 4px;
+}
+.meta-var-lbl { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #555; margin-bottom: 4px; }
+.meta-var-lbl span { color: #999; font-weight: normal; }
+.meta-vars input {
+  width: 100%; font-family: Arial, sans-serif; font-size: 0.9rem;
+  padding: 9px 12px; border: 2px solid #000;
+}
+.meta-vars input:focus { outline: none; background: #fafafa; }
+.meta-vars input::placeholder { color: #bbb; }
+.meta-arrow { font-size: 1.4rem; font-weight: bold; text-align: center; color: #000; }
+
+.year-row { display: flex; gap: 12px; align-items: flex-end; }
+.year-grp { flex: 1; }
+.year-grp label { display: block; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #444; margin-bottom: 5px; }
+.year-grp input {
+  width: 100%; font-family: Arial, sans-serif; font-size: 0.9rem;
+  padding: 8px 11px; border: 1px solid #ccc;
+}
+.year-grp input:focus { border-color: #000; outline: none; }
+.year-sep { font-size: 1.2rem; font-weight: bold; color: #ccc; padding-bottom: 6px; }
+.year-hint { font-size: 0.68rem; color: #aaa; margin-top: 4px; }
+
+.meta-ctx input {
+  width: 100%; font-family: Arial, sans-serif; font-size: 0.88rem;
+  padding: 8px 11px; border: 1px solid #ccc;
+}
+.meta-ctx input:focus { border-color: #000; outline: none; }
+.meta-ctx input::placeholder { color: #bbb; }
+
+/* ── PASO 2 (general) ── */
 .main-hint {
-  font-size: 0.72rem; color: #888; background: #fafafa;
-  border: 1px solid #e8e8e8; padding: 8px 12px; margin-bottom: 10px;
-  line-height: 1.5;
+  font-size: 0.71rem; color: #888; background: #fafafa;
+  border: 1px solid #e8e8e8; padding: 8px 12px; margin-bottom: 10px; line-height: 1.5;
 }
 .main-hint strong { color: #444; }
 .main-row { display: flex; align-items: center; gap: 8px; }
@@ -72,12 +188,8 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 }
 .main-row input:focus { outline: none; background: #fafafa; }
 .main-row input::placeholder { color: #bbb; }
-.main-row .fixed-b {
-  flex: 1; font-family: Arial, sans-serif; font-size: 0.87rem;
-  padding: 8px 10px; border: 2px solid #000; background: #fff; color: #000;
-}
 
-/* ── Paso 3 ── */
+/* ── PASO 3 (ctx grid) ── */
 .ctx-grid {
   display: grid; grid-template-columns: 1fr 1fr 0.7fr 0.6fr; gap: 12px;
 }
@@ -92,10 +204,9 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 .grp input:focus { border-color: #000; outline: none; }
 .grp input::placeholder { color: #b0b0b0; }
 
-/* ── Estilos ── */
+/* ── ESTILOS ── */
 .style-grid {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px;
-  margin-bottom: 14px;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin-bottom: 14px;
 }
 .scard {
   border: 1px solid #ccc; padding: 9px 10px; cursor: pointer;
@@ -103,37 +214,38 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 }
 .scard:hover { border-color: #000; }
 .scard.sel { border: 2px solid #000; background: #f8f8f8; }
-.scard .snum { font-size: 0.65rem; color: #999; font-weight: bold; text-transform: uppercase; }
-.scard .sname { font-size: 0.78rem; font-weight: bold; margin-top: 2px; line-height: 1.3; }
-.scard .sdesc { font-size: 0.7rem; color: #666; margin-top: 3px; line-height: 1.3; }
+.scard .snum { font-size: 0.63rem; color: #999; font-weight: bold; text-transform: uppercase; }
+.scard .sname { font-size: 0.76rem; font-weight: bold; margin-top: 2px; line-height: 1.3; }
+.scard .sdesc { font-size: 0.68rem; color: #666; margin-top: 3px; line-height: 1.3; }
 
 .opts-row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .chk-label {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 0.8rem; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer;
 }
 
+/* ── BTN GENERAR ── */
 .btn-gen {
   width: 100%; padding: 13px; font-family: Arial, sans-serif;
-  font-size: 0.95rem; font-weight: bold; background: #000; color: #fff;
+  font-size: 0.92rem; font-weight: bold; background: #000; color: #fff;
   border: none; cursor: pointer; text-transform: uppercase;
-  letter-spacing: 2px; margin-bottom: 28px;
+  letter-spacing: 2px; margin-bottom: 28px; margin-top: 4px;
 }
 .btn-gen:hover { background: #333; }
 
-#output { display: none; }
+/* ── OUTPUT ── */
+.output-block { display: none; }
 .out-model-summary {
   background: #f5f5f5; border-left: 4px solid #000;
-  padding: 10px 14px; margin-bottom: 20px; font-size: 0.78rem;
+  padding: 10px 14px; margin-bottom: 20px; font-size: 0.76rem;
 }
-.out-model-title { font-weight: bold; text-transform: uppercase; font-size: 0.7rem; color: #888; margin-bottom: 6px; }
+.out-model-title { font-weight: bold; text-transform: uppercase; font-size: 0.68rem; color: #888; margin-bottom: 6px; }
 .pair-tag {
   display: inline-block; border: 1px solid #ccc;
-  padding: 2px 8px; margin: 2px; font-size: 0.78rem; background: #fff;
+  padding: 2px 8px; margin: 2px; font-size: 0.76rem; background: #fff;
 }
 .out-sec { margin-bottom: 22px; }
 .out-sec-hdr {
-  background: #000; color: #fff; font-size: 0.72rem;
+  background: #000; color: #fff; font-size: 0.7rem;
   font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px;
   padding: 4px 12px; display: inline-block; margin-bottom: 10px;
 }
@@ -144,128 +256,304 @@ header p  { font-size: 0.76rem; color: #555; margin-top: 4px; }
 .out-list { list-style: none; padding: 0; counter-reset: item; }
 .out-list li {
   font-size: 0.87rem; line-height: 1.65;
-  padding: 6px 0 6px 28px; border-bottom: 1px solid #f0f0f0;
+  padding: 6px 0 6px 30px; border-bottom: 1px solid #f0f0f0;
   counter-increment: item; position: relative;
 }
 .out-list li::before {
   content: counter(item);
   position: absolute; left: 4px; top: 6px;
-  font-size: 0.7rem; font-weight: bold; color: #bbb;
+  font-size: 0.68rem; font-weight: bold; color: #bbb;
 }
-.out-list li.ipma-item { background: #fafafa; font-style: italic; }
+.out-list li.nota-item {
+  color: #888; font-style: italic;
+}
+.out-list li.nota-item::before { color: #ccc; }
 
 .action-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
 .btn-copy {
   flex: 1; min-width: 130px; padding: 10px; font-family: Arial, sans-serif;
-  font-size: 0.85rem; font-weight: bold; background: #000; color: #fff;
+  font-size: 0.83rem; font-weight: bold; background: #000; color: #fff;
   border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
 }
 .btn-copy:hover { background: #333; }
 .btn-top {
   flex: 1; min-width: 130px; padding: 10px; font-family: Arial, sans-serif;
-  font-size: 0.85rem; font-weight: bold; background: #fff; color: #000;
+  font-size: 0.83rem; font-weight: bold; background: #fff; color: #000;
   border: 2px solid #000; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
 }
 .btn-top:hover { background: #f0f0f0; }
-.copy-ok { font-size: 0.75rem; color: #555; display: none; }
+.copy-ok { font-size: 0.74rem; color: #555; display: none; }
 
-footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid #eee; font-size: 0.68rem; color: #bbb; text-align: center; }
-@media(max-width:650px){
+footer {
+  margin-top: 36px; padding: 12px 24px; border-top: 1px solid #eee;
+  font-size: 0.66rem; color: #bbb; text-align: center;
+}
+
+@media(max-width:680px){
   .ctx-grid { grid-template-columns: 1fr 1fr; }
   .style-grid { grid-template-columns: repeat(2,1fr); }
+  .biv-grid { grid-template-columns: 1fr; }
+  .meta-vars { grid-template-columns: 1fr; }
+  .meta-arrow { display: none; }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Generador de Problemas, Objetivos e Hipótesis · PLS-SEM</h1>
-  <p>Investigación explicativa · 10 estilos · AntoMatic Tools · v4</p>
+  <h1>Generador de Problemas, Objetivos e Hipótesis</h1>
+  <p>AntoMatic Tools · v5 · Huaraz, Áncash, Perú</p>
 </header>
 
-<!-- ══════════════════════════════════════════════════════ PASO 1 -->
-<div class="step">
-  <h2>Paso 1 · Pares de variables (conexiones del modelo)</h2>
-  <p class="step-note">Ingresa cada relación del modelo. La variable de la izquierda influye sobre la de la derecha.</p>
-  <div id="pairs-container"></div>
-  <div class="pair-btns">
-    <button class="btn-add-pair" id="btn-add" onclick="addPair()">+ Agregar par</button>
-    <button class="btn-rm-last" id="btn-rm-last" onclick="removeLastPair()">− Eliminar último par</button>
-    <span class="pair-counter" id="pair-counter">0 / 16 pares</span>
-  </div>
+<!-- ══ PESTAÑAS ══ -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('plssem',this)">PLS-SEM</button>
+  <button class="tab-btn" onclick="switchTab('bivariada',this)">Bivariada</button>
+  <button class="tab-btn" onclick="switchTab('metaanalisis',this)">Meta-Análisis</button>
 </div>
 
-<!-- ══════════════════════════════════════════════════════ PASO 2 -->
-<div class="step">
-  <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
-  <div class="main-hint" id="main-hint">
-    <strong>3 opciones:</strong><br>
-    · <strong>Celda izquierda vacía</strong> → se usará <em>"los factores que inciden en…"</em> (pregunta general por factores)<br>
-    · <strong>Una variable</strong> → ej: <em>la calidad de servicio</em> (una sola variable representa a <span id="hint-vars-list" style="color:#555"></span>)<br>
-    · <strong>Varias variables</strong> → ej: <em id="hint-vars-ejemplo" style="color:#555"></em> (toma las principales variables de la primera columna)
-  </div>
-  <div class="main-row">
-    <input type="text" id="main-a" placeholder="Dejar vacío · o escribir una o varias variables X" oninput="updateHint()">
-    <span class="arrow-lbl">→</span>
-    <input type="text" id="main-b" placeholder="Ej: la lealtad">
-  </div>
-</div>
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- PESTAÑA 1: PLS-SEM                                                 -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<div id="panel-plssem" class="tab-panel active">
 
-<!-- ══════════════════════════════════════════════════════ PASO 3 -->
-<div class="step">
-  <h2>Paso 3 · Contexto</h2>
-  <div class="ctx-grid">
-    <div class="grp">
-      <label>¿De quiénes? <span style="font-weight:normal;color:#aaa">(opcional)</span></label>
-      <input type="text" id="ctx-quienes" placeholder="los clientes">
-    </div>
-    <div class="grp">
-      <label>¿En qué organización?</label>
-      <input type="text" id="ctx-org" placeholder="la Caja Huancayo">
-    </div>
-    <div class="grp">
-      <label>¿Dónde? (ciudad, región)</label>
-      <input type="text" id="ctx-lugar" placeholder="Huaraz, Áncash">
-    </div>
-    <div class="grp">
-      <label>¿Año? (período)</label>
-      <input type="text" id="ctx-anio" placeholder="2026">
+  <!-- PASO 1 -->
+  <div class="step">
+    <h2>Paso 1 · Pares de variables (conexiones del modelo)</h2>
+    <p class="step-note">Ingresa cada relación del modelo. La variable de la izquierda influye sobre la de la derecha.</p>
+    <div id="pairs-container"></div>
+    <div class="pair-btns">
+      <button class="btn-add-pair" id="btn-add" onclick="addPair()">+ Agregar par</button>
+      <button class="btn-rm-last" id="btn-rm-last" onclick="removeLastPair()">− Eliminar último</button>
+      <span class="pair-counter" id="pair-counter">0 / 16 pares</span>
     </div>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════════════════════ PASO 4 -->
-<div class="step">
-  <h2>Paso 4 · Estilo de redacción</h2>
-  <div class="style-grid" id="style-grid"></div>
-  <div class="opts-row">
-    <label class="chk-label">
-      <input type="checkbox" id="ipma-chk">
-      Agregar pregunta IPMA (mapa importancia-rendimiento)
-    </label>
+  <!-- PASO 2 -->
+  <div class="step">
+    <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
+    <div class="main-hint" id="main-hint">
+      <strong>3 opciones:</strong><br>
+      · <strong>Celda izquierda vacía</strong> → se usará <em>"los factores que inciden en…"</em><br>
+      · <strong>Una variable</strong> → ej: <em>la calidad de servicio</em> (representa a <span id="hint-vars-list" style="color:#555"></span>)<br>
+      · <strong>Varias variables</strong> → <em id="hint-vars-ejemplo" style="color:#555"></em>
+    </div>
+    <div class="main-row">
+      <input type="text" id="pls-main-a" placeholder="Vacío · o escribir una o varias variables X" oninput="updateHint()">
+      <span class="arrow-lbl">→</span>
+      <input type="text" id="pls-main-b" placeholder="Ej: la lealtad">
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step">
+    <h2>Paso 3 · Contexto</h2>
+    <div class="ctx-grid">
+      <div class="grp">
+        <label>¿De quiénes? <span style="font-weight:normal;color:#aaa">(opcional)</span></label>
+        <input type="text" id="pls-quienes" placeholder="los clientes">
+      </div>
+      <div class="grp">
+        <label>¿En qué organización?</label>
+        <input type="text" id="pls-org" placeholder="la Caja Huancayo">
+      </div>
+      <div class="grp">
+        <label>¿Dónde?</label>
+        <input type="text" id="pls-lugar" placeholder="Huaraz, Áncash">
+      </div>
+      <div class="grp">
+        <label>¿Año?</label>
+        <input type="text" id="pls-anio" placeholder="2026">
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step">
+    <h2>Paso 4 · Estilo de redacción</h2>
+    <div class="style-grid" id="pls-style-grid"></div>
+    <div class="opts-row">
+      <label class="chk-label">
+        <input type="checkbox" id="pls-ipma-chk">
+        Agregar pregunta IPMA (mapa importancia-rendimiento)
+      </label>
+    </div>
+  </div>
+
+  <button class="btn-gen" onclick="generatePLS()">⚡ Generar Problemas · Objetivos · Hipótesis</button>
+
+  <div id="pls-output" class="output-block">
+    <div id="pls-out-model" class="out-model-summary" style="display:none"></div>
+    <div id="pls-out-content"></div>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyAll('pls-output')">Copiar todo el texto</button>
+      <button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Volver arriba</button>
+      <span class="copy-ok" id="pls-copy-ok">✔ Copiado</span>
+    </div>
   </div>
 </div>
 
-<button class="btn-gen" onclick="generate()">⚡ Generar Problemas · Objetivos · Hipótesis</button>
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- PESTAÑA 2: BIVARIADA                                               -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<div id="panel-bivariada" class="tab-panel">
 
-<!-- ══════════════════════════════════════════════════════ OUTPUT -->
-<div id="output">
-  <div id="out-model" class="out-model-summary" style="display:none"></div>
-  <div id="out-content"></div>
-  <div class="action-row">
-    <button class="btn-copy" onclick="copyAll()">Copiar todo el texto</button>
-    <button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Volver arriba</button>
-    <span class="copy-ok" id="copy-ok">✔ Copiado al portapapeles</span>
+  <!-- PASO 1 -->
+  <div class="step">
+    <h2>Paso 1 · Variables y dimensiones</h2>
+    <p class="step-note">Ingresa las dos variables y sus dimensiones. Las dimensiones son opcionales pero permiten generar los problemas específicos.</p>
+    <div class="biv-grid">
+      <!-- Variable 1 -->
+      <div class="biv-var-block">
+        <div class="biv-var-title">Variable 1 (X)</div>
+        <input type="text" class="main-var" id="biv-var1" value="teletrabajo">
+        <div id="biv-dims-1"></div>
+        <div class="biv-dim-btns">
+          <button class="btn-add-dim" onclick="addDim(1)">+ Dimensión</button>
+          <button class="btn-rm-dim-last" id="biv-rm1" onclick="rmLastDim(1)">− Eliminar</button>
+        </div>
+      </div>
+      <!-- Variable 2 -->
+      <div class="biv-var-block">
+        <div class="biv-var-title">Variable 2 (Y)</div>
+        <input type="text" class="main-var" id="biv-var2" value="desempeño laboral">
+        <div id="biv-dims-2"></div>
+        <div class="biv-dim-btns">
+          <button class="btn-add-dim" onclick="addDim(2)">+ Dimensión</button>
+          <button class="btn-rm-dim-last" id="biv-rm2" onclick="rmLastDim(2)">− Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step">
+    <h2>Paso 2 · Par principal — Pregunta General y Objetivo General</h2>
+    <div class="main-hint">
+      <strong>Celda izquierda vacía</strong> → se usará la Variable 1 automáticamente para construir la pregunta y objetivo general.
+    </div>
+    <div class="main-row">
+      <input type="text" id="biv-main-a" placeholder="Vacío · o escribir texto personalizado para X">
+      <span class="arrow-lbl">→</span>
+      <input type="text" id="biv-main-b" placeholder="Ej: el desempeño laboral">
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div class="step">
+    <h2>Paso 3 · Contexto</h2>
+    <div class="ctx-grid">
+      <div class="grp">
+        <label>¿De quiénes? <span style="font-weight:normal;color:#aaa">(opcional)</span></label>
+        <input type="text" id="biv-quienes" placeholder="los trabajadores">
+      </div>
+      <div class="grp">
+        <label>¿En qué organización?</label>
+        <input type="text" id="biv-org" placeholder="la Municipalidad">
+      </div>
+      <div class="grp">
+        <label>¿Dónde?</label>
+        <input type="text" id="biv-lugar" placeholder="Huaraz, Áncash">
+      </div>
+      <div class="grp">
+        <label>¿Año?</label>
+        <input type="text" id="biv-anio" placeholder="2026">
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div class="step">
+    <h2>Paso 4 · Estilo de redacción</h2>
+    <div class="style-grid" id="biv-style-grid"></div>
+  </div>
+
+  <button class="btn-gen" onclick="generateBIV()">⚡ Generar Problemas · Objetivos · Hipótesis</button>
+
+  <div id="biv-output" class="output-block">
+    <div id="biv-out-model" class="out-model-summary" style="display:none"></div>
+    <div id="biv-out-content"></div>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyAll('biv-output')">Copiar todo el texto</button>
+      <button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Volver arriba</button>
+      <span class="copy-ok" id="biv-copy-ok">✔ Copiado</span>
+    </div>
   </div>
 </div>
 
-<footer>AntoMatic Tools · idea de Antonio Lirio v4 · Huaraz, Áncash, Perú</footer>
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- PESTAÑA 3: META-ANÁLISIS                                           -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<div id="panel-metaanalisis" class="tab-panel">
 
+  <!-- PASO 1 -->
+  <div class="step">
+    <h2>Paso 1 · Variables</h2>
+    <p class="step-note">Ingresa las dos variables del meta-análisis.</p>
+    <div class="meta-vars">
+      <div>
+        <div class="meta-var-lbl">Variable 1 <span>(variable independiente / predictora)</span></div>
+        <input type="text" id="meta-var1" placeholder="Ej: teletrabajo">
+      </div>
+      <div class="meta-arrow">→</div>
+      <div>
+        <div class="meta-var-lbl">Variable 2 <span>(variable dependiente / criterio)</span></div>
+        <input type="text" id="meta-var2" placeholder="Ej: desempeño laboral">
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div class="step">
+    <h2>Paso 2 · Período de búsqueda</h2>
+    <p class="step-note">Indica el rango de años de los estudios analizados.</p>
+    <div class="year-row">
+      <div class="year-grp">
+        <label>Año inicial</label>
+        <input type="number" id="meta-year-from" placeholder="2016" min="1900" max="2099"
+               oninput="autoSuggestYearTo()">
+        <div class="year-hint" id="meta-year-hint"></div>
+      </div>
+      <div class="year-sep">—</div>
+      <div class="year-grp">
+        <label>Año final</label>
+        <input type="number" id="meta-year-to" placeholder="2025" min="1900" max="2099">
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-gen" onclick="generateMETA()">⚡ Generar Problemas · Objetivos · Hipótesis</button>
+
+  <div id="meta-output" class="output-block">
+    <div id="meta-out-model" class="out-model-summary" style="display:none"></div>
+    <div id="meta-out-content"></div>
+    <div class="action-row">
+      <button class="btn-copy" onclick="copyAll('meta-output')">Copiar todo el texto</button>
+      <button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Volver arriba</button>
+      <span class="copy-ok" id="meta-copy-ok">✔ Copiado</span>
+    </div>
+  </div>
+</div>
+
+<footer>AntoMatic Tools · idea de Antonio Lirio · v5 · Huaraz, Áncash, Perú</footer>
+
+<!-- ════════════════════════════════════════════════════════════════════ -->
+<!-- SCRIPT                                                              -->
+<!-- ════════════════════════════════════════════════════════════════════ -->
 <script>
-// ══════════════════════════════════════════════════════════════════
-// UTILIDADES DE TEXTO
-// ══════════════════════════════════════════════════════════════════
+// ══════════════════════════════
+// TABS
+// ══════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
 
+// ══════════════════════════════
+// TEXTO UTILITIES
+// ══════════════════════════════
 const ARTS = ['el ','la ','los ','las ','un ','una ','unos ','unas ',
               'del ','de la ','de los ','de las ','al ','a la ','a los ','a las ',
               'mi ','su ','sus ','mis ','este ','esta ','ese ','esa ',
@@ -275,478 +563,582 @@ function tieneArticulo(str) {
   const s = str.toLowerCase().trim();
   return ARTS.some(a => s.startsWith(a));
 }
-
 function detectarArticulo(str) {
   const s = str.toLowerCase().trim();
   const primera = s.split(/\s+/)[0];
-
   const mascMa = ['sistemas','programas','temas','problemas','esquemas',
-                  'dilemas','traumas','poemas','idiomas','aromas','climas',
-                  'dramas','panoramas','diagramas','paradigmas','axiomas',
-                  'teoremas','emblemas','estigmas','fantasmas'];
+    'dilemas','traumas','poemas','idiomas','aromas','climas','dramas',
+    'panoramas','diagramas','paradigmas','axiomas','teoremas','emblemas','estigmas','fantasmas'];
   if (mascMa.includes(primera)) return 'los ';
-
   if (primera.endsWith('as')) return 'las ';
-  if (primera.endsWith('iones') || primera.endsWith('siones') ||
-      primera.endsWith('dades') || primera.endsWith('tudes') ||
-      primera.endsWith('cias')  || primera.endsWith('gias')  ||
-      primera.endsWith('uras')  || primera.endsWith('ezas')  ||
-      primera.endsWith('eras')) return 'las ';
+  if (primera.endsWith('iones')||primera.endsWith('siones')||primera.endsWith('dades')||
+      primera.endsWith('tudes')||primera.endsWith('cias')||primera.endsWith('gias')||
+      primera.endsWith('uras')||primera.endsWith('ezas')||primera.endsWith('eras')) return 'las ';
   if (primera.endsWith('os')) return 'los ';
-  if (primera.endsWith('es') || primera.endsWith('s')) return 'los ';
-
+  if (primera.endsWith('es')||primera.endsWith('s')) return 'los ';
   const femSuf = ['ión','dad','tad','tud','sis','cia','gia','ría','za','ez','umbre','eza','ura'];
   if (femSuf.some(f => primera.endsWith(f))) return 'la ';
-
-  const mascMaSing = ['sistema','programa','tema','problema','esquema',
-                      'dilema','trauma','poema','idioma','aroma','clima',
-                      'drama','panorama','diagrama','paradigma','axioma',
-                      'teorema','emblema','estigma','fantasma'];
+  const mascMaSing = ['sistema','programa','tema','problema','esquema','dilema','trauma',
+    'poema','idioma','aroma','clima','drama','panorama','diagrama','paradigma',
+    'axioma','teorema','emblema','estigma','fantasma'];
   if (primera.endsWith('a') && !mascMaSing.includes(primera) &&
       !primera.endsWith('ma') && !primera.endsWith('pa') &&
       !primera.endsWith('ta') && !primera.endsWith('ca')) return 'la ';
-
   return 'el ';
 }
-
 function conArticulo(str) {
   const s = str.trim();
   if (!s) return s;
   if (tieneArticulo(s)) return s;
   return detectarArticulo(s) + s;
 }
-
-function cap(str) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function fixDeEl(str) {
-  return str.replace(/\bde el\b/gi, 'del');
-}
-
-function t(str) {
-  return cap(fixDeEl(str));
-}
-
-// ══════════════════════════════════════════════════════════════════
-// LÓGICA PASO 2: CONSTRUIR mainA SEGÚN OPCIÓN
-// ══════════════════════════════════════════════════════════════════
-// Devuelve el texto para usar en pregunta/objetivo general según
-// lo que el usuario haya escrito (o no) en el campo izquierdo.
-//
-//   Opción 1 – vacío     → "los factores que inciden en …"
-//   Opción 2 – 1 variable → la variable tal cual
-//   Opción 3 – varias    → las variables separadas por comas/punto y coma
-//
-function buildMainA(rawValue) {
-  return rawValue.trim(); // se devuelve tal cual; la lógica por opción
-                           // se aplica en generate() al construir las frases
-}
-
-// Construye la pregunta/objetivo general según el valor de mainA
-function buildPG(e, mainARaw, mainB, ctx) {
-  if (!mainARaw) {
-    // Opción 1: vacío → factores
-    return t(`¿Cuáles son los factores que inciden en ${mainB} ${ctx}?`);
-  }
-  return t(e.pg(mainARaw, mainB, ctx));
-}
-
-function buildOG(e, mainARaw, mainB, ctx) {
-  if (!mainARaw) {
-    // Opción 1: vacío → factores
-    return t(`Identificar los factores que inciden en ${mainB} ${ctx}.`);
-  }
-  return t(e.og(mainARaw, mainB, ctx));
-}
-
-// ══════════════════════════════════════════════════════════════════
-// 10 ESTILOS
-// ══════════════════════════════════════════════════════════════════
-const ESTILOS = [
-  {
-    id:1, short:"Ñaupas", ref:"p.200",
-    desc:"¿Cuál es la influencia de X en Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿Cuál es la influencia de ${mx} en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿Cuál es la influencia de ${x} en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Determinar la influencia de ${mx} en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Determinar la influencia de ${x} en ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} tiene una influencia significativa en ${y} ${c}.`),
-  },
-  {
-    id:2, short:"Feras Alnaser", ref:"",
-    desc:"¿En qué medida X influye? / H: existe influencia significativa",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿En qué medida ${mx} influyen en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Establecer en qué medida ${mx} influyen en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
-    he:(x,y,c)=>t(`Existe una influencia significativa de ${x} sobre ${y} ${c}.`),
-  },
-  {
-    id:3, short:"Ken Wong", ref:"",
-    desc:"¿En qué medida X influye? / H: influye significativamente",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿En qué medida ${mx} influyen en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Establecer en qué medida ${mx} influyen en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} influye significativamente en ${y} ${c}.`),
-  },
-  {
-    id:4, short:"Y explicado por X", ref:"",
-    desc:"¿En qué medida Y es explicado por X?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿En qué medida ${my} es explicado por ${mx} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${y} es explicado por ${x} ${c}?`),
-    og:(mx,my,c)=>t(`Establecer en qué medida ${my} es explicado por ${mx} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer cómo ${y} es explicado por ${x} ${c}.`),
-    he:(x,y,c)=>t(`${y} es explicado positiva y significativamente por ${x} ${c}.`),
-  },
-  {
-    id:5, short:"Contribuye", ref:"Charmele",
-    desc:"¿En qué medida X contribuye a Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿En qué medida ${mx} contribuyen a ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${x} contribuye a ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Determinar la medida en que ${mx} contribuyen a ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer cómo ${x} contribuye a ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} contribuye de manera significativa a ${y} ${c}.`),
-  },
-  {
-    id:6, short:"Incide", ref:"Charmele",
-    desc:"¿En qué medida X incide en Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿En qué medida ${mx} inciden en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${x} incide en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Establecer cómo ${mx} inciden en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer cómo ${x} incide en ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} tiene un efecto directo positivo sobre ${y} ${c}.`),
-  },
-  {
-    id:7, short:"De qué manera", ref:"Villanueva",
-    desc:"¿De qué manera X incide en Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿De qué manera ${mx} inciden en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿De qué manera ${x} incide en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Analizar los factores de ${mx} y su incidencia en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Analizar ${x} y su incidencia en ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} incide en ${y} ${c}.`),
-  },
-  {
-    id:8, short:"Factores que influyen", ref:"",
-    desc:"¿Qué factores de X influyen en Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿Qué factores de ${mx} influyen en ${my} ${c}?`),
-    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Establecer los factores de ${mx} que influyen en ${my} ${c}.`),
-    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
-    he:(x,y,c)=>t(`Existe una influencia significativa de ${x} sobre ${y} ${c}.`),
-  },
-  {
-    id:9, short:"Adopción de medidas", ref:"Dimensiones",
-    desc:"¿Tiene influencia la adopción de medidas de X en Y?",
-    hasGeneral:true,
-    pg:(mx,my,c)=>t(`¿Tiene una influencia la adopción de medidas de ${mx} en ${my} ${c}?`),
-    pe:(x,y,c,mx)=>t(`¿Tiene una influencia la adopción de medidas de ${mx} en la dimensión ${x} en ${y} ${c}?`),
-    og:(mx,my,c)=>t(`Comprobar si ${mx} en todas sus dimensiones tiene una influencia positiva en ${my} ${c}.`),
-    oe:(x,y,c,mx)=>t(`Comprobar si ${mx} en su dimensión ${x} tiene una influencia positiva en ${y} ${c}.`),
-    he:(x,y,c,mx)=>t(`La adopción de medidas de ${mx} en su dimensión ${x} tiene una influencia positiva en ${y} ${c}.`),
-  },
-  {
-    id:10, short:"Eiffel / Mediación", ref:"Basbeth",
-    desc:"Modelo con variable mediadora (sin P/O general)",
-    hasGeneral:false,
-    pg:null,
-    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
-    og:null,
-    oe:(x,y,c)=>t(`Establecer cómo ${x} influye en ${y} ${c}.`),
-    he:(x,y,c)=>t(`${x} tiene un efecto significativo sobre ${y} ${c}.`),
-  },
-];
-
-const IPMA_PE = (my,c)=>t(`¿Cuál es el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}?`);
-const IPMA_OE = (my,c)=>t(`Identificar el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}.`);
-
-const TITULOS = {
-  PG : 'Problema general',
-  PE : 'Problemas específicos',
-  OG : 'Objetivo general',
-  OE : 'Objetivos específicos',
-  HE : 'Hipótesis específicas',
-};
-
-// ══════════════════════════════════════════════════════════════════
-// PARES
-// ══════════════════════════════════════════════════════════════════
-const MAX = 16;
-
-// Pares preliminares predeterminados
-const PARES_INICIALES = [
-  ['el servicio financiero',  'la lealtad'],
-  ['la información',          'la lealtad'],
-  ['el trato del trabajador', 'la lealtad'],
-  ['la tangibilidad',         'la lealtad'],
-];
-
-function addPair(aVal = '', bVal = '') {
-  const n = document.querySelectorAll('.pair-row').length;
-  if (n >= MAX) return;
-  const c = document.getElementById('pairs-container');
-  const d = document.createElement('div');
-  d.className = 'pair-row';
-  d.innerHTML = `
-    <span class="pair-num">${n+1}</span>
-    <input type="text" class="var-input var-a" value="${escHtml(aVal)}" placeholder="Variable independiente (X)" oninput="updateHint()">
-    <span class="arrow-lbl">→</span>
-    <input type="text" class="var-input var-b" value="${escHtml(bVal)}" placeholder="Variable dependiente (Y)">
-    <button class="btn-rm" onclick="removePair(this)" title="Eliminar par">✕</button>`;
-  c.appendChild(d);
-  updateHint();
-  updateCounter();
-}
-
+function cap(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : str; }
+function fixDeEl(str) { return str.replace(/\bde el\b/gi, 'del'); }
+function t(str) { return cap(fixDeEl(str)); }
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function removeLastPair() {
-  const rows = document.querySelectorAll('.pair-row');
-  if (!rows.length) return;
-  rows[rows.length - 1].remove();
-  renumber();
-  updateHint();
-  updateCounter();
-}
+// ══════════════════════════════
+// ESTILOS
+// ══════════════════════════════
+const ESTILOS = [
+  { id:1, short:"Ñaupas", ref:"p.200", desc:"¿Cuál es la influencia de X en Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿Cuál es la influencia de ${mx} en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿Cuál es la influencia de ${x} en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Determinar la influencia de ${mx} en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Determinar la influencia de ${x} en ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} tiene una influencia significativa en ${y} ${c}.`) },
+  { id:2, short:"Feras Alnaser", ref:"", desc:"¿En qué medida X influye? / H: existe influencia significativa", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿En qué medida ${mx} influyen en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Establecer en qué medida ${mx} influyen en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
+    he:(x,y,c)=>t(`Existe una influencia significativa de ${x} sobre ${y} ${c}.`) },
+  { id:3, short:"Ken Wong", ref:"", desc:"¿En qué medida X influye? / H: influye significativamente", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿En qué medida ${mx} influyen en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Establecer en qué medida ${mx} influyen en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} influye significativamente en ${y} ${c}.`) },
+  { id:4, short:"Y explicado por X", ref:"", desc:"¿En qué medida Y es explicado por X?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿En qué medida ${my} es explicado por ${mx} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${y} es explicado por ${x} ${c}?`),
+    og:(mx,my,c)=>t(`Establecer en qué medida ${my} es explicado por ${mx} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer cómo ${y} es explicado por ${x} ${c}.`),
+    he:(x,y,c)=>t(`${y} es explicado positiva y significativamente por ${x} ${c}.`) },
+  { id:5, short:"Contribuye", ref:"Charmele", desc:"¿En qué medida X contribuye a Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿En qué medida ${mx} contribuyen a ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${x} contribuye a ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Determinar la medida en que ${mx} contribuyen a ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer cómo ${x} contribuye a ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} contribuye de manera significativa a ${y} ${c}.`) },
+  { id:6, short:"Incide", ref:"Charmele", desc:"¿En qué medida X incide en Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿En qué medida ${mx} inciden en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${x} incide en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Establecer cómo ${mx} inciden en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer cómo ${x} incide en ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} tiene un efecto directo positivo sobre ${y} ${c}.`) },
+  { id:7, short:"De qué manera", ref:"Villanueva", desc:"¿De qué manera X incide en Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿De qué manera ${mx} inciden en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿De qué manera ${x} incide en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Analizar los factores de ${mx} y su incidencia en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Analizar ${x} y su incidencia en ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} incide en ${y} ${c}.`) },
+  { id:8, short:"Factores que influyen", ref:"", desc:"¿Qué factores de X influyen en Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿Qué factores de ${mx} influyen en ${my} ${c}?`),
+    pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Establecer los factores de ${mx} que influyen en ${my} ${c}.`),
+    oe:(x,y,c)=>t(`Establecer en qué medida ${x} influye en ${y} ${c}.`),
+    he:(x,y,c)=>t(`Existe una influencia significativa de ${x} sobre ${y} ${c}.`) },
+  { id:9, short:"Adopción de medidas", ref:"Dimensiones", desc:"¿Tiene influencia la adopción de medidas de X en Y?", hasGeneral:true,
+    pg:(mx,my,c)=>t(`¿Tiene una influencia la adopción de medidas de ${mx} en ${my} ${c}?`),
+    pe:(x,y,c,mx)=>t(`¿Tiene una influencia la adopción de medidas de ${mx} en la dimensión ${x} en ${y} ${c}?`),
+    og:(mx,my,c)=>t(`Comprobar si ${mx} en todas sus dimensiones tiene una influencia positiva en ${my} ${c}.`),
+    oe:(x,y,c,mx)=>t(`Comprobar si ${mx} en su dimensión ${x} tiene una influencia positiva en ${y} ${c}.`),
+    he:(x,y,c,mx)=>t(`La adopción de medidas de ${mx} en su dimensión ${x} tiene una influencia positiva en ${y} ${c}.`) },
+  { id:10, short:"Eiffel / Mediación", ref:"Basbeth", desc:"Modelo con variable mediadora (sin P/O general)", hasGeneral:false,
+    pg:null, pe:(x,y,c)=>t(`¿En qué medida ${x} influye en ${y} ${c}?`),
+    og:null, oe:(x,y,c)=>t(`Establecer cómo ${x} influye en ${y} ${c}.`),
+    he:(x,y,c)=>t(`${x} tiene un efecto significativo sobre ${y} ${c}.`) },
+];
 
-function removePair(btn) {
-  btn.closest('.pair-row').remove();
-  renumber();
-  updateHint();
-  updateCounter();
-}
+const IPMA_PE = (my,c) => t(`¿Cuál es el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}?`);
+const IPMA_OE = (my,c) => t(`Identificar el constructo que debe priorizarse (del mapa importancia-rendimiento) para mejorar el desempeño del constructo objetivo de ${my} ${c}.`);
 
-function renumber() {
-  document.querySelectorAll('.pair-row').forEach((r,i)=>{
-    r.querySelector('.pair-num').textContent = i+1;
-  });
-}
+// ══════════════════════════════
+// STYLE CARDS builder
+// ══════════════════════════════
+let selStylePLS = 1;
+let selStyleBIV = 1;
 
-function updateCounter() {
-  const n = document.querySelectorAll('.pair-row').length;
-  document.getElementById('pair-counter').textContent = `${n} / ${MAX} pares`;
-  document.getElementById('btn-add').disabled = n >= MAX;
-  document.getElementById('btn-rm-last').disabled = n === 0;
-}
-
-// ══════════════════════════════════════════════════════════════════
-// STYLE CARDS
-// ══════════════════════════════════════════════════════════════════
-let selStyle = 1;
-
-function buildCards() {
-  const g = document.getElementById('style-grid');
+function buildCards(gridId, selRef, setFn) {
+  const g = document.getElementById(gridId);
   ESTILOS.forEach(e => {
     const d = document.createElement('div');
     d.className = 'scard' + (e.id===1?' sel':'');
-    d.onclick = () => pickStyle(e.id);
-    d.innerHTML = `
-      <div class="snum">Estilo ${e.id} ${e.ref?'· '+e.ref:''}</div>
+    d.onclick = () => setFn(e.id, gridId);
+    d.innerHTML = `<div class="snum">E${e.id}${e.ref?' · '+e.ref:''}</div>
       <div class="sname">${e.short}</div>
       <div class="sdesc">${e.desc}</div>`;
     g.appendChild(d);
   });
 }
 
-function pickStyle(id) {
-  selStyle = id;
-  document.querySelectorAll('.scard').forEach((c,i)=>{
-    c.classList.toggle('sel', ESTILOS[i].id===id);
+function pickStylePLS(id, gridId) {
+  selStylePLS = id;
+  highlightCards(gridId, id);
+}
+function pickStyleBIV(id, gridId) {
+  selStyleBIV = id;
+  highlightCards(gridId, id);
+}
+function highlightCards(gridId, selId) {
+  const g = document.getElementById(gridId);
+  g.querySelectorAll('.scard').forEach((c,i) => c.classList.toggle('sel', ESTILOS[i].id===selId));
+}
+
+// ══════════════════════════════
+// PLS-SEM PARES
+// ══════════════════════════════
+const MAX_PAIRS = 16;
+const PARES_INICIALES = [
+  ['el servicio financiero','la lealtad'],
+  ['la información','la lealtad'],
+  ['el trato del trabajador','la lealtad'],
+  ['la tangibilidad','la lealtad'],
+];
+
+function addPair(aVal='', bVal='') {
+  const n = document.querySelectorAll('.pair-row').length;
+  if (n >= MAX_PAIRS) return;
+  const c = document.getElementById('pairs-container');
+  const d = document.createElement('div');
+  d.className = 'pair-row';
+  d.innerHTML = `
+    <span class="pair-num">${n+1}</span>
+    <input type="text" class="var-input var-a" value="${escHtml(aVal)}" placeholder="Variable X" oninput="updateHint()">
+    <span class="arrow-lbl">→</span>
+    <input type="text" class="var-input var-b" value="${escHtml(bVal)}" placeholder="Variable Y">
+    <button class="btn-rm" onclick="removePair(this)" title="Eliminar">✕</button>`;
+  c.appendChild(d);
+  updateHint(); updateCounter();
+}
+function removeLastPair() {
+  const rows = document.querySelectorAll('.pair-row');
+  if (!rows.length) return;
+  rows[rows.length-1].remove();
+  renumber(); updateHint(); updateCounter();
+}
+function removePair(btn) {
+  btn.closest('.pair-row').remove();
+  renumber(); updateHint(); updateCounter();
+}
+function renumber() {
+  document.querySelectorAll('.pair-row').forEach((r,i)=>{
+    r.querySelector('.pair-num').textContent = i+1;
+  });
+}
+function updateCounter() {
+  const n = document.querySelectorAll('.pair-row').length;
+  document.getElementById('pair-counter').textContent = `${n} / ${MAX_PAIRS} pares`;
+  document.getElementById('btn-add').disabled = n >= MAX_PAIRS;
+  document.getElementById('btn-rm-last').disabled = n === 0;
+}
+function updateHint() {
+  const varsX = [...new Set([...document.querySelectorAll('.pair-row .var-a')]
+    .map(i=>i.value.trim()).filter(Boolean))];
+  const spanList = document.getElementById('hint-vars-list');
+  if (spanList) spanList.textContent = varsX.length ? varsX.join(', ') : 'las variables X del Paso 1';
+  const spanEj = document.getElementById('hint-vars-ejemplo');
+  if (spanEj) {
+    if (varsX.length>=2) spanEj.textContent = varsX.slice(0,-1).join(', ') + ' y ' + varsX.slice(-1)[0];
+    else if (varsX.length===1) spanEj.textContent = varsX[0];
+    else spanEj.textContent = 'el servicio financiero, la información y la tangibilidad';
+  }
+  const inp = document.getElementById('pls-main-a');
+  if (inp) inp.style.borderColor = inp.value.trim()==='' ? '#aaa' : '#000';
+}
+
+// ══════════════════════════════
+// BIVARIADA DIMENSIONES
+// ══════════════════════════════
+function addDim(varNum) {
+  const cont = document.getElementById(`biv-dims-${varNum}`);
+  const n = cont.querySelectorAll('.dim-row').length + 1;
+  const d = document.createElement('div');
+  d.className = 'dim-row';
+  d.innerHTML = `
+    <span class="dim-lbl">D${n}</span>
+    <input type="text" placeholder="Dimensión ${n}">
+    <button class="btn-rm-dim" onclick="this.closest('.dim-row').remove(); renumberDims(${varNum}); updateRmBtn(${varNum})">✕</button>`;
+  cont.appendChild(d);
+  updateRmBtn(varNum);
+}
+function rmLastDim(varNum) {
+  const cont = document.getElementById(`biv-dims-${varNum}`);
+  const rows = cont.querySelectorAll('.dim-row');
+  if (!rows.length) return;
+  rows[rows.length-1].remove();
+  updateRmBtn(varNum);
+}
+function renumberDims(varNum) {
+  const cont = document.getElementById(`biv-dims-${varNum}`);
+  cont.querySelectorAll('.dim-row').forEach((r,i)=>{
+    r.querySelector('.dim-lbl').textContent = `D${i+1}`;
+    r.querySelector('input').placeholder = `Dimensión ${i+1}`;
+  });
+}
+function updateRmBtn(varNum) {
+  const n = document.getElementById(`biv-dims-${varNum}`).querySelectorAll('.dim-row').length;
+  document.getElementById(`biv-rm${varNum}`).disabled = n===0;
+}
+
+// ══════════════════════════════
+// META-ANÁLISIS SUGERENCIA AÑO
+// ══════════════════════════════
+function autoSuggestYearTo() {
+  const from = parseInt(document.getElementById('meta-year-from').value);
+  const toInput = document.getElementById('meta-year-to');
+  const hint = document.getElementById('meta-year-hint');
+  if (!isNaN(from) && from >= 1900 && from <= 2099) {
+    const suggested = from + 9;
+    if (!toInput.value) {
+      toInput.value = suggested;
+      hint.textContent = `✓ Año final sugerido: ${suggested}`;
+    } else {
+      hint.textContent = '';
+    }
+  } else {
+    hint.textContent = '';
+  }
+}
+
+// ══════════════════════════════
+// OUTPUT HELPERS
+// ══════════════════════════════
+function sec(titulo, contenido) {
+  return `<div class="out-sec"><div class="out-sec-hdr">${titulo}</div>${contenido}</div>`;
+}
+function copyAll(outputId) {
+  const tx = document.getElementById(outputId).dataset.plain || '';
+  navigator.clipboard.writeText(tx).then(()=>{
+    const prefix = outputId.split('-')[0];
+    const m = document.getElementById(`${prefix}-copy-ok`);
+    m.style.display = 'inline';
+    setTimeout(()=>m.style.display='none', 2500);
   });
 }
 
-// ══════════════════════════════════════════════════════════════════
-// GENERATE
-// ══════════════════════════════════════════════════════════════════
-function generate() {
+// ══════════════════════════════
+// GENERATE PLS-SEM
+// ══════════════════════════════
+function buildPG(e, mainA, mainB, ctx) {
+  if (!mainA) return t(`¿Cuáles son los factores que inciden en ${mainB} ${ctx}?`);
+  return t(e.pg(mainA, mainB, ctx));
+}
+function buildOG(e, mainA, mainB, ctx) {
+  if (!mainA) return t(`Identificar los factores que inciden en ${mainB} ${ctx}.`);
+  return t(e.og(mainA, mainB, ctx));
+}
+
+function generatePLS() {
   const rows = [...document.querySelectorAll('.pair-row')];
-  const pairsRaw = rows.map(r=>([
+  const pairs = rows.map(r=>([
     r.querySelector('.var-a').value.trim(),
     r.querySelector('.var-b').value.trim()
   ])).filter(([a,b])=>a&&b);
+  if (!pairs.length) { alert('Ingresa al menos un par de variables.'); return; }
 
-  if (!pairsRaw.length) { alert('Ingresa al menos un par de variables con ambos campos completados.'); return; }
+  const mainA = document.getElementById('pls-main-a').value.trim();
+  const mainB = document.getElementById('pls-main-b').value.trim();
+  const refY  = mainB || (pairs[0] ? pairs[0][1] : '[variable dependiente]');
+  const quienes = document.getElementById('pls-quienes').value.trim();
+  const org   = document.getElementById('pls-org').value.trim()   || '[organización]';
+  const lugar = document.getElementById('pls-lugar').value.trim() || '[lugar]';
+  const anio  = document.getElementById('pls-anio').value.trim()  || '[año]';
+  const ipma  = document.getElementById('pls-ipma-chk').checked;
+  const e = ESTILOS.find(x=>x.id===selStylePLS);
+  const ctx = quienes ? `de ${quienes} de ${org}, ${lugar}, ${anio}` : `de ${org}, ${lugar}, ${anio}`;
 
-  const pairs = pairsRaw;
+  let html='', plain='';
 
-  const mainARaw = document.getElementById('main-a').value.trim();
-  const mainBRaw = document.getElementById('main-b').value.trim();
-
-  // ── Variable dependiente de referencia para IPMA y fallback
-  const refY = mainBRaw || (pairs[0] ? pairs[0][1] : '[variable dependiente]');
-
-  const quienes = document.getElementById('ctx-quienes').value.trim(); // opcional
-  const org     = document.getElementById('ctx-org').value.trim()     || '[organización]';
-  const lugar   = document.getElementById('ctx-lugar').value.trim()   || '[lugar]';
-  const anio    = document.getElementById('ctx-anio').value.trim()    || '[año]';
-  const ipma    = document.getElementById('ipma-chk').checked;
-  const e       = ESTILOS.find(x=>x.id===selStyle);
-
-  // Si "quienes" está vacío, se omite "de [quiénes]" del contexto
-  const ctx = quienes
-    ? `de ${quienes} de ${org}, ${lugar}, ${anio}`
-    : `de ${org}, ${lugar}, ${anio}`;
-
-  // ── Construir mainA según opción
-  // Opción 1: vacío → se detecta en buildPG/buildOG
-  // Opción 2 y 3: el texto tal como lo escribió el usuario
-  const mainA = mainARaw; // puede estar vacío
-
-  let html = '';
-  let plain = '';
-
-  // Resumen del modelo
+  // Model summary
   const modelHTML = pairs.map(([a,b])=>`<span class="pair-tag">${a} → ${b}</span>`).join(' ');
-  document.getElementById('out-model').innerHTML =
-    `<div class="out-model-title">Modelo · ${pairs.length} par(es) · Estilo ${e.id}: ${e.short}</div>${modelHTML}`;
-  document.getElementById('out-model').style.display = 'block';
+  const mdl = document.getElementById('pls-out-model');
+  mdl.innerHTML = `<div class="out-model-title">Modelo · ${pairs.length} par(es) · Estilo ${e.id}: ${e.short}</div>${modelHTML}`;
+  mdl.style.display = 'block';
 
-  // ── PROBLEMA GENERAL ──
-  if (e.hasGeneral && mainBRaw) {
-    const tx = buildPG(e, mainA, mainBRaw, ctx);
-    html  += sec(TITULOS.PG, `<div class="out-general">${tx}</div>`);
-    plain += `${TITULOS.PG}\n${tx}\n\n`;
+  if (e.hasGeneral && mainB) {
+    const tx = buildPG(e, mainA, mainB, ctx);
+    html  += sec('Problema general', `<div class="out-general">${tx}</div>`);
+    plain += `Problema general\n${tx}\n\n`;
   }
 
-  // ── PROBLEMAS ESPECÍFICOS ──
-  let peHtml='', peText='', n=0;
+  let peHtml='', peText=''; let n=0;
   pairs.forEach(([a,b])=>{
     n++;
     const tx = e.id===9 ? e.pe(a,b,ctx,mainA||a) : e.pe(a,b,ctx);
-    peHtml += `<li>${tx}</li>`;
-    peText += `${n}. ${tx}\n`;
+    peHtml += `<li>${tx}</li>`; peText += `${n}. ${tx}\n`;
   });
-  if (ipma && selStyle!==10) {
-    n++;
-    const tx = IPMA_PE(refY, ctx);
-    peHtml += `<li class="ipma-item">${tx}</li>`;
-    peText += `${n}. ${tx}\n`;
+  if (ipma && selStylePLS!==10) {
+    n++; const tx=IPMA_PE(refY,ctx);
+    peHtml+=`<li>${tx}</li>`; peText+=`${n}. ${tx}\n`;
   }
-  html  += sec(TITULOS.PE, `<ol class="out-list">${peHtml}</ol>`);
-  plain += `${TITULOS.PE}\n${peText}\n`;
+  html  += sec('Problemas específicos', `<ol class="out-list">${peHtml}</ol>`);
+  plain += `Problemas específicos\n${peText}\n`;
 
-  // ── OBJETIVO GENERAL ──
-  if (e.hasGeneral && mainBRaw) {
-    const tx = buildOG(e, mainA, mainBRaw, ctx);
-    html  += sec(TITULOS.OG, `<div class="out-general">${tx}</div>`);
-    plain += `${TITULOS.OG}\n${tx}\n\n`;
+  if (e.hasGeneral && mainB) {
+    const tx = buildOG(e, mainA, mainB, ctx);
+    html  += sec('Objetivo general', `<div class="out-general">${tx}</div>`);
+    plain += `Objetivo general\n${tx}\n\n`;
   }
 
-  // ── OBJETIVOS ESPECÍFICOS ──
   let oeHtml='', oeText=''; n=0;
-  pairs.forEach(([a,b])=>{
-    n++;
+  pairs.forEach(([a,b])=>{ n++;
     const tx = e.id===9 ? e.oe(a,b,ctx,mainA||a) : e.oe(a,b,ctx);
-    oeHtml += `<li>${tx}</li>`;
-    oeText += `${n}. ${tx}\n`;
+    oeHtml+=`<li>${tx}</li>`; oeText+=`${n}. ${tx}\n`;
   });
-  if (ipma && selStyle!==10) {
-    n++;
-    const tx = IPMA_OE(refY, ctx);
-    oeHtml += `<li class="ipma-item">${tx}</li>`;
-    oeText += `${n}. ${tx}\n`;
+  if (ipma && selStylePLS!==10) {
+    n++; const tx=IPMA_OE(refY,ctx);
+    oeHtml+=`<li>${tx}</li>`; oeText+=`${n}. ${tx}\n`;
   }
-  html  += sec(TITULOS.OE, `<ol class="out-list">${oeHtml}</ol>`);
-  plain += `${TITULOS.OE}\n${oeText}\n`;
+  html  += sec('Objetivos específicos', `<ol class="out-list">${oeHtml}</ol>`);
+  plain += `Objetivos específicos\n${oeText}\n`;
 
-  // ── HIPÓTESIS ESPECÍFICAS ──
   let heHtml='', heText=''; n=0;
-  pairs.forEach(([a,b])=>{
-    n++;
+  pairs.forEach(([a,b])=>{ n++;
     const tx = e.id===9 ? e.he(a,b,ctx,mainA||a) : e.he(a,b,ctx);
-    heHtml += `<li>${tx}</li>`;
-    heText += `${n}. ${tx}\n`;
+    heHtml+=`<li>${tx}</li>`; heText+=`${n}. ${tx}\n`;
   });
-  html  += sec(TITULOS.HE, `<ol class="out-list">${heHtml}</ol>`);
-  plain += `${TITULOS.HE}\n${heText}`;
+  html  += sec('Hipótesis específicas', `<ol class="out-list">${heHtml}</ol>`);
+  plain += `Hipótesis específicas\n${heText}`;
 
-  document.getElementById('out-content').innerHTML = html;
-  document.getElementById('output').dataset.plain = plain;
-  document.getElementById('output').style.display = 'block';
-  document.getElementById('copy-ok').style.display = 'none';
-  document.getElementById('output').scrollIntoView({behavior:'smooth', block:'start'});
+  const out = document.getElementById('pls-output');
+  document.getElementById('pls-out-content').innerHTML = html;
+  out.dataset.plain = plain;
+  out.style.display = 'block';
+  document.getElementById('pls-copy-ok').style.display = 'none';
+  out.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-function sec(titulo, contenido) {
-  return `<div class="out-sec">
-    <div class="out-sec-hdr">${titulo}</div>
-    ${contenido}
-  </div>`;
-}
+// ══════════════════════════════
+// GENERATE BIVARIADA
+// ══════════════════════════════
+function generateBIV() {
+  const var1 = document.getElementById('biv-var1').value.trim();
+  const var2 = document.getElementById('biv-var2').value.trim();
+  if (!var1 || !var2) { alert('Ingresa ambas variables.'); return; }
 
-// ══════════════════════════════════════════════════════════════════
-// COPY
-// ══════════════════════════════════════════════════════════════════
-function copyAll() {
-  const tx = document.getElementById('output').dataset.plain || '';
-  navigator.clipboard.writeText(tx).then(()=>{
-    const m = document.getElementById('copy-ok');
-    m.style.display = 'inline';
-    setTimeout(()=> m.style.display='none', 2500);
-  });
-}
+  const dims1 = [...document.querySelectorAll('#biv-dims-1 .dim-row input')]
+    .map(i=>i.value.trim()).filter(Boolean);
+  const dims2 = [...document.querySelectorAll('#biv-dims-2 .dim-row input')]
+    .map(i=>i.value.trim()).filter(Boolean);
 
-// ══════════════════════════════════════════════════════════════════
-// HINT DINÁMICO — Paso 2
-// ══════════════════════════════════════════════════════════════════
-function updateHint() {
-  // Recoger variables X únicas del Paso 1
-  const varsX = [...new Set(
-    [...document.querySelectorAll('.pair-row .var-a')]
-      .map(i => i.value.trim()).filter(Boolean)
-  )];
+  const mainA = document.getElementById('biv-main-a').value.trim() || conArticulo(var1);
+  const mainB = document.getElementById('biv-main-b').value.trim() || conArticulo(var2);
+  const quienes = document.getElementById('biv-quienes').value.trim();
+  const org   = document.getElementById('biv-org').value.trim()   || '[organización]';
+  const lugar = document.getElementById('biv-lugar').value.trim() || '[lugar]';
+  const anio  = document.getElementById('biv-anio').value.trim()  || '[año]';
+  const ipma  = false;
+  const e = ESTILOS.find(x=>x.id===selStyleBIV);
+  const ctx = quienes ? `de ${quienes} de ${org}, ${lugar}, ${anio}` : `de ${org}, ${lugar}, ${anio}`;
 
-  // Línea 2: lista de variables X para mostrar en "una sola variable representa a…"
-  const spanList = document.getElementById('hint-vars-list');
-  if (spanList) {
-    spanList.textContent = varsX.length
-      ? varsX.join(', ')
-      : 'las variables X del Paso 1';
-  }
-
-  // Línea 3: ejemplo automático con las variables X del Paso 1
-  const spanEj = document.getElementById('hint-vars-ejemplo');
-  if (spanEj) {
-    if (varsX.length >= 2) {
-      const ultimas = varsX.slice(-1)[0];
-      const anteriores = varsX.slice(0, -1).join(', ');
-      spanEj.textContent = `${anteriores} y ${ultimas}`;
-    } else if (varsX.length === 1) {
-      spanEj.textContent = varsX[0];
-    } else {
-      spanEj.textContent = 'el servicio financiero, la información y la tangibilidad';
+  // Construir pares desde dimensiones
+  // Si hay dimensiones en ambas → pares cruzados (D1x1 → D1x2, etc.)
+  // Si solo hay dims en una   → dims de esa var con la otra variable entera
+  // Si no hay dims             → solo el par general
+  let pairs = [];
+  if (dims1.length && dims2.length) {
+    const maxDim = Math.max(dims1.length, dims2.length);
+    for (let i=0; i<dims1.length; i++) {
+      for (let j=0; j<dims2.length; j++) {
+        pairs.push([conArticulo(dims1[i]), conArticulo(dims2[j])]);
+      }
     }
+    // Si queda muy largo, usar solo mismo índice si las dos tienen la misma cantidad
+    if (dims1.length === dims2.length) {
+      pairs = dims1.map((d1,i) => [conArticulo(d1), conArticulo(dims2[i])]);
+    }
+  } else if (dims1.length) {
+    pairs = dims1.map(d => [conArticulo(d), mainB]);
+  } else if (dims2.length) {
+    pairs = dims2.map(d => [mainA, conArticulo(d)]);
   }
 
-  // Resaltar la opción activa según lo que hay en main-a
-  const val = (document.getElementById('main-a')?.value || '').trim();
-  const lines = document.querySelectorAll('#main-hint > span.hint-opt, #main-hint br ~ *');
-  // Highlight logic: simplemente actualizar el color de la celda de input
-  const inp = document.getElementById('main-a');
-  if (inp) {
-    inp.style.borderColor = val === '' ? '#aaa' : '#000';
+  let html='', plain='';
+
+  // Modelo
+  const mdl = document.getElementById('biv-out-model');
+  mdl.innerHTML = `<div class="out-model-title">Bivariada · ${var1} → ${var2} · Estilo ${e.id}: ${e.short}</div>
+    <span class="pair-tag">${conArticulo(var1)} → ${conArticulo(var2)}</span>`;
+  mdl.style.display = 'block';
+
+  // PG
+  if (e.hasGeneral) {
+    const tx = e.pg ? t(e.pg(mainA, mainB, ctx)) : t(`¿Cuáles son los factores que inciden en ${mainB} ${ctx}?`);
+    html  += sec('Problema general', `<div class="out-general">${tx}</div>`);
+    plain += `Problema general\n${tx}\n\n`;
   }
+
+  // PE
+  let peHtml='', peText='', n=0;
+  if (pairs.length) {
+    pairs.forEach(([a,b])=>{ n++;
+      const tx = e.pe(a,b,ctx);
+      peHtml+=`<li>${tx}</li>`; peText+=`${n}. ${tx}\n`;
+    });
+  } else {
+    n++; const tx = e.pe(mainA, mainB, ctx);
+    peHtml+=`<li>${tx}</li>`; peText+=`${n}. ${tx}\n`;
+  }
+  if (ipma) {
+    n++; const tx=IPMA_PE(mainB,ctx);
+    peHtml+=`<li>${tx}</li>`; peText+=`${n}. ${tx}\n`;
+  }
+  html  += sec('Problemas específicos', `<ol class="out-list">${peHtml}</ol>`);
+  plain += `Problemas específicos\n${peText}\n`;
+
+  // OG
+  if (e.hasGeneral) {
+    const tx = e.og ? t(e.og(mainA, mainB, ctx)) : t(`Identificar los factores que inciden en ${mainB} ${ctx}.`);
+    html  += sec('Objetivo general', `<div class="out-general">${tx}</div>`);
+    plain += `Objetivo general\n${tx}\n\n`;
+  }
+
+  // OE
+  let oeHtml='', oeText=''; n=0;
+  if (pairs.length) {
+    pairs.forEach(([a,b])=>{ n++;
+      const tx = e.oe(a,b,ctx);
+      oeHtml+=`<li>${tx}</li>`; oeText+=`${n}. ${tx}\n`;
+    });
+  } else {
+    n++; const tx = e.oe(mainA, mainB, ctx);
+    oeHtml+=`<li>${tx}</li>`; oeText+=`${n}. ${tx}\n`;
+  }
+  if (ipma) {
+    n++; const tx=IPMA_OE(mainB,ctx);
+    oeHtml+=`<li>${tx}</li>`; oeText+=`${n}. ${tx}\n`;
+  }
+  html  += sec('Objetivos específicos', `<ol class="out-list">${oeHtml}</ol>`);
+  plain += `Objetivos específicos\n${oeText}\n`;
+
+  // HE
+  let heHtml='', heText=''; n=0;
+  if (pairs.length) {
+    pairs.forEach(([a,b])=>{ n++;
+      const tx = e.he(a,b,ctx);
+      heHtml+=`<li>${tx}</li>`; heText+=`${n}. ${tx}\n`;
+    });
+  } else {
+    n++; const tx = e.he(mainA, mainB, ctx);
+    heHtml+=`<li>${tx}</li>`; heText+=`${n}. ${tx}\n`;
+  }
+  html  += sec('Hipótesis específicas', `<ol class="out-list">${heHtml}</ol>`);
+  plain += `Hipótesis específicas\n${heText}`;
+
+  const out = document.getElementById('biv-output');
+  document.getElementById('biv-out-content').innerHTML = html;
+  out.dataset.plain = plain;
+  out.style.display = 'block';
+  document.getElementById('biv-copy-ok').style.display = 'none';
+  out.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ══════════════════════════════════════════════════════════════════
+// ══════════════════════════════
+// GENERATE META-ANÁLISIS
+// ══════════════════════════════
+function generateMETA() {
+  const v1raw = document.getElementById('meta-var1').value.trim();
+  const v2raw = document.getElementById('meta-var2').value.trim();
+  if (!v1raw || !v2raw) { alert('Ingresa ambas variables.'); return; }
+
+  const yearFrom = document.getElementById('meta-year-from').value.trim();
+  const yearTo   = document.getElementById('meta-year-to').value.trim();
+
+  const v1 = conArticulo(v1raw);
+  const v2 = conArticulo(v2raw);
+
+  const periodo = (yearFrom && yearTo)
+    ? ` (${yearFrom}-${yearTo})`
+    : yearFrom ? ` (${yearFrom})` : '';
+
+  const ctxFrase = '';
+
+  // ── PROBLEMAS
+  const P = [
+    `¿En qué medida ${v1} incide en ${v2}${ctxFrase}?`,
+    `¿Los estudios sobre ${v1} y ${v2} son heterogéneos?`,
+    `¿Existe sesgo de publicación de investigaciones sobre ${v1} y su incidencia en ${v2}?`,
+    `¿Cuáles son los estudios producidos sobre ${v1} y su incidencia en ${v2}${periodo}?`,
+  ].map((p,i) => t(p));
+
+  // ── OBJETIVOS
+  const O = [
+    `Analizar sistemáticamente ${v1} para determinar su medida de incidencia en ${v2}${ctxFrase}.`,
+    `Determinar si los estudios de ${v1} y su incidencia en ${v2} son heterogéneos.`,
+    `Determinar la existencia de sesgo de publicación sobre ${v1} y su incidencia en ${v2}.`,
+    `Identificar los estudios producidos sobre ${v1} y su incidencia en ${v2}${periodo}.`,
+  ].map(o => t(o));
+
+  // ── HIPÓTESIS (4ta no es hipotetizable)
+  const H = [
+    `${cap(v1)} incide significativamente en ${v2}${ctxFrase}.`,
+    `Los estudios sobre ${v1} y su incidencia en ${v2} son heterogéneos.`,
+    `Los estudios sobre ${v1} y su incidencia en ${v2} tienen sesgo de publicación.`,
+    null // No hipotetizable
+  ];
+
+  // ── RENDER
+  let html='', plain='';
+
+  // Modelo
+  const mdl = document.getElementById('meta-out-model');
+  mdl.innerHTML = `<div class="out-model-title">Meta-Análisis${periodo}</div>
+    <span class="pair-tag">${v1} → ${v2}</span>`;
+  mdl.style.display = 'block';
+
+  // Problemas
+  const peHtml = P.map(p=>`<li>${p}</li>`).join('');
+  const peText = P.map((p,i)=>`${i+1}. ${p}`).join('\n');
+  html  += sec('Problemas', `<ol class="out-list">${peHtml}</ol>`);
+  plain += `Problemas\n${peText}\n\n`;
+
+  // Objetivos
+  const oeHtml = O.map(o=>`<li>${o}</li>`).join('');
+  const oeText = O.map((o,i)=>`${i+1}. ${o}`).join('\n');
+  html  += sec('Objetivos', `<ol class="out-list">${oeHtml}</ol>`);
+  plain += `Objetivos\n${oeText}\n\n`;
+
+  // Hipótesis
+  const heHtml = H.map(h => h
+    ? `<li>${h}</li>`
+    : `<li class="nota-item">(No es hipotetizable)</li>`).join('');
+  const heText = H.map((h,i)=> h
+    ? `${i+1}. ${h}`
+    : `${i+1}. (No es hipotetizable)`).join('\n');
+  html  += sec('Hipótesis', `<ol class="out-list">${heHtml}</ol>`);
+  plain += `Hipótesis\n${heText}`;
+
+  const out = document.getElementById('meta-output');
+  document.getElementById('meta-out-content').innerHTML = html;
+  out.dataset.plain = plain;
+  out.style.display = 'block';
+  document.getElementById('meta-copy-ok').style.display = 'none';
+  out.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ══════════════════════════════
 // INIT
-// ══════════════════════════════════════════════════════════════════
+// ══════════════════════════════
 window.onload = () => {
-  buildCards();
-  PARES_INICIALES.forEach(([a,b]) => addPair(a, b));
+  buildCards('pls-style-grid', selStylePLS, pickStylePLS);
+  buildCards('biv-style-grid', selStyleBIV, pickStyleBIV);
+  PARES_INICIALES.forEach(([a,b]) => addPair(a,b));
   updateHint();
+  updateRmBtn(1); updateRmBtn(2);
 };
 </script>
 </body>
